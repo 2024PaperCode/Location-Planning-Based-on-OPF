@@ -1,3 +1,4 @@
+% This is only applicable to the IEEE 33 Bus BenchMark. If you want to adapt it to the IEEE 141 Bus Benchmark, please use matrix sparsity to accelerate the calculation.
 clc;
 popSize = 4;
 T = 100;
