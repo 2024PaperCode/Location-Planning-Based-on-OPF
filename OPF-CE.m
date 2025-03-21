@@ -1,4 +1,4 @@
-% This is only applicable to the IEEE 33 Bus BenchMark. If you want to adapt it to the IEEE 141 Bus Benchmark, please use matrix sparsity to accelerate the calculation.
+% This is only applicable to the IEEE 33 Bus BenchMark. If you want to adapt it to the IEEE 141 Bus Benchmark, please use matrix sparsity to accelerate the calculation or use an accelerated solver
 clc;
 popSize = 4;
 T = 100;
@@ -477,7 +477,7 @@ function [W1, P1, Q1,Plm1, Qlm1, Vk1, alpha1, W2, P2, Q2,Plm2, Qlm2,Vk2, alpha2,
         alpk = alpha1(i+ng1,1);
         p = busPv(i,1);
         F = [ck1*P1(p,1)-alpk+ck0+ck1*Pd_cons1(p,1),  sqrt(ck2)*P1(p,1)+sqrt(ck2)*Pd_cons1(p,1);  sqrt(ck2)*P1(p,1)+sqrt(ck2)*Pd_cons1(p,1), -1];
-        constraint = [constraint, F <= 0];  % 目标函数LMI约束
+        constraint = [constraint, F <= 0];
     end
     
     for i = 1:nv
@@ -487,7 +487,7 @@ function [W1, P1, Q1,Plm1, Qlm1, Vk1, alpha1, W2, P2, Q2,Plm2, Qlm2,Vk2, alpha2,
         alpk = alpha2(i+ng2,1);
         p = busPv(i,1);
         F = [ck1*P2(p,1)-alpk+ck0+ck1*Pd_cons2(p,1),  sqrt(ck2)*P2(p,1)+sqrt(ck2)*Pd_cons2(p,1);  sqrt(ck2)*P2(p,1)+sqrt(ck2)*Pd_cons2(p,1), -1];
-        constraint = [constraint, F <= 0];  % 目标函数LMI约束
+        constraint = [constraint, F <= 0];
     end
     
     
@@ -495,28 +495,28 @@ function [W1, P1, Q1,Plm1, Qlm1, Vk1, alpha1, W2, P2, Q2,Plm2, Qlm2,Vk2, alpha2,
         p = branch1(i,1);
         q = branch1(i,2);
         F = [-Slm_cons1(p,q)*Slm_cons1(p,q), Plm1(i,1), Qlm1(i,1); Plm1(i,1), -1,0; Qlm1(i,1), 0, -1];
-        %constraint = [constraint, F <= 0];  % 线路lm视在功率的LMI约束
-        %constraint = [constraint, Plm1(i,1) <= Plm_cons1(p,q)]; % 线路lm有功约束
+        %constraint = [constraint, F <= 0];
+        %constraint = [constraint, Plm1(i,1) <= Plm_cons1(p,q)];
     
         p = branch1(i,2);
         q = branch1(i,1);
         F = [-Slm_cons1(p,q)*Slm_cons1(p,q), Plm1(i,2), Qlm1(i,2); Plm1(i,2), -1,0; Qlm1(i,2), 0, -1];
-        %constraint = [constraint, F <= 0];  % 线路ml视在功率的LMI约束
-        %constraint = [constraint, Plm1(i,2) <= Plm_cons1(p,q)]; % 线路ml有功约束
+        %constraint = [constraint, F <= 0];
+        %constraint = [constraint, Plm1(i,2) <= Plm_cons1(p,q)];
     end
     
     for i = 1:nl2
         p = branch2(i,1);
         q = branch2(i,2);
         F = [-Slm_cons2(p,q)*Slm_cons2(p,q), Plm2(i,1), Qlm2(i,1); Plm2(i,1), -1,0; Qlm2(i,1), 0, -1];
-        %constraint = [constraint, F <= 0];  % 线路lm视在功率的LMI约束
-        %constraint = [constraint, Plm2(i,1) <= Plm_cons2(p,q)]; % 线路lm有功约束
+        %constraint = [constraint, F <= 0];
+        %constraint = [constraint, Plm2(i,1) <= Plm_cons2(p,q)];
     
         p = branch2(i,2);
         q = branch2(i,1);
         F = [-Slm_cons2(p,q)*Slm_cons2(p,q), Plm2(i,2), Qlm2(i,2); Plm2(i,2), -1,0; Qlm2(i,2), 0, -1];
-        %constraint = [constraint, F <= 0];  % 线路ml视在功率的LMI约束
-        %constraint = [constraint, Plm2(i,2) <= Plm_cons2(p,q)]; % 线路ml有功约束
+        %constraint = [constraint, F <= 0];
+        %constraint = [constraint, Plm2(i,2) <= Plm_cons2(p,q)];
     end
     
     j = 1;
@@ -527,7 +527,7 @@ function [W1, P1, Q1,Plm1, Qlm1, Vk1, alpha1, W2, P2, Q2,Plm2, Qlm2,Vk2, alpha2,
        else
             constraint = [constraint, Pmin_cons1(i) - Pd_cons1(i) <= P1(i,1) <= Pmax_cons1(i) - Pd_cons1(i), Qmin_cons1(i) - Qd_cons1(i) <= Q1(i,1) <= Qmax_cons1(i) - Qd_cons1(i)]; % 节点有功、无功约束
        end
-       constraint = [constraint, Vmin_cons1(i)*Vmin_cons1(i) <= Vk1(i,1) <= Vmax_cons1(i)*Vmax_cons1(i)]; % 节点电压约束,注意Xmk(i,1)是有名值
+       constraint = [constraint, Vmin_cons1(i)*Vmin_cons1(i) <= Vk1(i,1) <= Vmax_cons1(i)*Vmax_cons1(i)];
     end
     constraint = [constraint, W1 >= 0];
     
@@ -540,7 +540,7 @@ function [W1, P1, Q1,Plm1, Qlm1, Vk1, alpha1, W2, P2, Q2,Plm2, Qlm2,Vk2, alpha2,
        else
             constraint = [constraint, Pmin_cons2(i) - Pd_cons2(i) <= P2(i,1) <= Pmax_cons2(i) - Pd_cons2(i), Qmin_cons2(i) - Qd_cons2(i) <= Q2(i,1) <= Qmax_cons2(i) - Qd_cons2(i)]; % 节点有功、无功约束
        end
-       constraint = [constraint, Vmin_cons2(i)*Vmin_cons2(i) <= Vk2(i,1) <= Vmax_cons2(i)*Vmax_cons2(i)]; % 节点电压约束,注意Xmk(i,1)是有名值
+       constraint = [constraint, Vmin_cons2(i)*Vmin_cons2(i) <= Vk2(i,1) <= Vmax_cons2(i)*Vmax_cons2(i)];
     end
     constraint = [constraint, W2 >= 0];
     
@@ -583,7 +583,6 @@ function [W1, P1, Q1,Plm1, Qlm1, Vk1, alpha1, W2, P2, Q2,Plm2, Qlm2,Vk2, alpha2,
         loss_cost = loss_cost + Closs * abs(value(Plm2(i,1))+value(Plm2(i,2)));
     end
     
-    % 弃光成本
     abandon_wind_cost = 0;
     for i = 1:nv
         p = busPv(i);
