@@ -557,7 +557,7 @@ function [W1, P1, Q1,Plm1, Qlm1, Vk1, alpha1, W2, P2, Q2,Plm2, Qlm2,Vk2, alpha2,
     
     sol = solvesdp(constraint, obj)
     ret = 0;
-    % 发电机组成本
+
     for i = 1 : ng1+nv
         ret = ret + value(alpha1(i));
     end
@@ -565,7 +565,7 @@ function [W1, P1, Q1,Plm1, Qlm1, Vk1, alpha1, W2, P2, Q2,Plm2, Qlm2,Vk2, alpha2,
          ret = ret + value(alpha2(i));
     end   
     
-    % sop日均成本
+
     sop_cost = 0;
     for i = 1:nsop
         sop_cost = sop_cost + 1000*baseMVA1*Cso(1,i)*1000 / (365*10*24*7);
@@ -574,7 +574,7 @@ function [W1, P1, Q1,Plm1, Qlm1, Vk1, alpha1, W2, P2, Q2,Plm2, Qlm2,Vk2, alpha2,
         sop_cost = sop_cost + 234*baseMVA1*Cso(1,i+nsop)*1000 / (365*10*24*7);
     end
 
-    % 网损
+
     loss_cost = 0;
     for i = 1:nl1
         loss_cost = loss_cost + Closs * abs(value(Plm1(i,1))+value(Plm1(i,2)));
@@ -583,7 +583,7 @@ function [W1, P1, Q1,Plm1, Qlm1, Vk1, alpha1, W2, P2, Q2,Plm2, Qlm2,Vk2, alpha2,
         loss_cost = loss_cost + Closs * abs(value(Plm2(i,1))+value(Plm2(i,2)));
     end
     
-    abandon_wind_cost = 0;
+
     for i = 1:nv
         p = busPv(i);
         abandon_wind_cost = abandon_wind_cost + (Pmax_cons1(p) - (Pd_cons1(p) + value(P1(p,1))))*Cpv;
